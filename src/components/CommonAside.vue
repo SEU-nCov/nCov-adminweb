@@ -1,6 +1,6 @@
 <template>
     <el-menu class="el-menu-vertical-demo" background-color="#545c64" text-color="#fff" active-text-color="#ffd04b" @open="handleOpen" @close="handleClose" :collapse="isCollapse">
-        <h3>{{isCollapse ? '后台':'SeuHotel后台管理系统'}}</h3>
+        <h3>{{isCollapse ? '后台':'后台管理系统'}}</h3>
         <el-menu-item  @click="clickMenu(item)"   v-for="item in noChildren" :index="item.path+''" :key="item.path">
             <i :class="'el-icon-'+item.icon"></i>
             <span slot="title">{{item.label}}</span>
