@@ -32,11 +32,14 @@
     }
 </script>
 
-<style lang="less" scoped>
+<style lang="less" scoped>  
 .el-header{
-    background-color: #bbb;
+    background-color:  #95afc6;
 }
 .el-main{
     padding-top: 0;
+	padding-left: 20px;
+	padding-right: 20px;
+	padding-bottom: 20px;
 }
 </style>
