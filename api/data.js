@@ -172,7 +172,7 @@ export const getVaccineAreaRanking = (param) => {
 export const getCityMap = (code) => {
 	return axios.request({
 		url: AliyunURL + 'areas_v3/bound/'+code+'_full.json',
-		//url: AliyunURL + 'areas_v3/bound/geojson?code='+code+'_full',
+		//url: '/areas_v3/bound/'+code+'_full.json',
 		method: 'get'
 	})
 }
