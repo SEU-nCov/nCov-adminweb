@@ -83,6 +83,9 @@
 								message: "发布成功",
 								type: "success",
 							});
+							this.selectedAddress=[];
+							this.time='';
+							this.extraInfo="";
 						} else {
 							console.log('error: submit one cov_allTest!!');
 						}

@@ -50,9 +50,9 @@
 							</el-button>
 						</template>
 					</el-table-column>
-					<el-table-column prop="level" label="等级" width="120">
+					<el-table-column prop="level" label="等级" sortable width="120">
 					</el-table-column>
-					<el-table-column prop="area" label="区域" width="120">
+					<el-table-column prop="area" label="区域" sortable width="120">
 					</el-table-column>
 					<el-table-column prop="address" label="具体位置">
 					</el-table-column>
