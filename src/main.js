@@ -3,6 +3,8 @@ import App from './App.vue'
 import ElementUI from 'element-ui';
 import echarts from "echarts";
 import Viewer from 'v-viewer'
+import FileSaver from 'file-saver'
+import xlsx from 'xlsx'
 import 'viewerjs/dist/viewer.css'
 import 'element-ui/lib/theme-chalk/index.css';
 
@@ -24,6 +26,8 @@ Vue.prototype.$http = http;
 Vue.prototype.$global = global
 Vue.prototype.$echarts = require("echarts")
 Vue.prototype.$admin = admin
+Vue.prototype.$FileSaver = FileSaver; 
+Vue.prototype.$XLSX = xlsx;
 // Vue.prototype.$echarts = echarts;
 // Vue.prototype.$confirm=MessageBox.confirm;
 
