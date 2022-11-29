@@ -433,7 +433,6 @@
 			getVaccineTopData() {
 				getVaccineTopData().then(res => {
 					this.vaccineTopData = res.data.data.VaccineTopData;
-					console.log(this.vaccineTopData);
 					this.chinaTotalVaccinations = (this.vaccineTopData['中国'].total_vaccinations / 100000000)
 						.toFixed(1);
 					this.chinaNewVaccinations = (this.vaccineTopData['中国'].new_vaccinations / 10000).toFixed(1);
