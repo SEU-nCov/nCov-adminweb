@@ -28,6 +28,10 @@ module.exports = {
 	  '/newsqa/v1':{
 		  target:'https://api.inews.qq.com',
 		  changeOrigin: true,
+	  },
+	  '/areas_v3/bound':{
+		  target:'https://geo.datav.aliyun.com',
+		  changeOrigin: true,
 	  }
     },
 	
