@@ -174,6 +174,8 @@
 				],
 				mapData: {},
 				cityMap: '',
+				maxValue: 0,
+				minValue: 1000000,
 				cityVacccinedData: [{
 						name: '通州区',
 						value: 38409
@@ -295,24 +297,17 @@
 					this.selectedCity = CodeToText[this.selectedAddressOptions[0]];
 				}
 				this.editFlag = !(this.selectedCityCode == this.$admin.state.cityCode);
-				this.getMapData();
-				this.getVaccinePointList();
-				this.getVaccineTopTenArea();
-				this.drawEchart();
+				this.getVaccinePointList();//卡片
+				this.getVaccineTopTenArea();//排行
+				this.getMapData();//地图
+				this.drawEchart();//饼图
 			},
 			getVaccineTopTenArea() {
 				var param = {
 					"city_code": this.selectedCityCode
 				};
 				getVaccineAreaRanking(param).then(res => {
-					console.log(res.data.data);
 					this.vaccineTopTenArea = res.data.data.map(item => this.selectedCity + item.area_name);
-					this.cityVacccinedData = res.data.data.map(item => {
-						return {
-							name: item.area_name,
-							value: item.vaccined_value
-						}
-					});
 				});
 			},
 			drawEchart() {
@@ -373,11 +368,23 @@
 				}
 			},
 			getMapData() {
+				this.getVaccineTopTenArea();
 				getCityMap(this.selectedCityCode).then(res => {
-					this.mapData = res.data;
-					console.log(this.mapData);
-					this.getVaccineTopTenArea();
-					this.drawMap();
+					this.mapData = res.data;//地区地理数据
+					var param = {
+						"city_code": this.selectedCityCode
+					};
+					getVaccineAreaRanking(param).then(res => {
+						this.cityVacccinedData = res.data.data.map(item => {//地区疫苗数据
+							this.maxValue = Math.max(this.maxValue, item.vaccined_value);
+							this.minValue = Math.min(this.minValue, item.vaccined_value);
+							return {
+								name: item.area_name,
+								value: item.vaccined_value
+							}
+						});
+						this.drawMap();
+					});
 				});
 			},
 			drawMap() {
@@ -410,7 +417,6 @@
 								overflow: 'break'
 							},
 							formatter(params) {
-								console.log(params)
 								return `区域：${params.data.name}</br>累计接种人数：${params.data.value}`
 							},
 							showDelay: 100
@@ -423,34 +429,28 @@
 							// 地图文字
 							label: {
 								// 通常状态下的样式
-								normal: {
-									// 默认是否显示地区名称
-									show: true,
-									fontSize: 10,
-									textStyle: {
-										color: 'black'
-									}
-								},
-								// 鼠标放上去的样式
-								emphasis: {
-									textStyle: {
-										color: 'black'
-									}
-								}
+								// 默认是否显示地区名称
+								show: true,
+								fontSize: 10,
+								color: 'black'
 							},
 							// 地图区域的样式设置
 							itemStyle: {
-								normal: {
-									// 地图边界颜色
-									borderColor: '#fff',
-									// 地图区域背景颜色
-									areaColor: '#AAD5FF',
+								// 地图边界颜色
+								borderColor: '#fff',
+								// 地图区域背景颜色
+								areaColor: '#AAD5FF',
+								
+							},
+							// 鼠标放上去高亮的样式
+							emphasis: {
+								label: {
+									color: 'black'
 								},
-								// 鼠标放上去高亮的样式
-								emphasis: {
+								itemStyle: {
 									// 鼠标放上去地图区域背景颜色
 									areaColor: '#0984e3',
-									borderWidth: 0
+									borderWidth: 0,
 								}
 							}
 						},
@@ -461,8 +461,8 @@
 						}, ],
 						// 视觉映射组件
 						visualMap: {
-							min: 10000,
-							max: 130000,
+							min: this.minValue,
+							max: this.maxValue,
 							// orient: "horizontal", //图例模式
 							itemWidth: 10, //图例宽度
 							itemHeight: 100, //图例高度
@@ -473,9 +473,6 @@
 						}
 					} // option报错改为let option就好了
 					this.cityMap.setOption(option)
-					// window.addEventListener('resize', function() {
-					// 	this.cityMap.resize()
-					// })
 				}
 			},
 			handleDialogClose() {
@@ -548,18 +545,16 @@
 					city_code: this.selectedCityCode
 				};
 				getVaccinePoints(param).then(res => {
-					console.log(res.data.data);
 					this.vaccinePoints = res.data.data;
 				});
 			}
 		},
-		created() {
-			//this.getMapData();
-		},
 		mounted() {
+			this.editFlag = this.selectedCityCode == this.$admin.state.cityCode ? false : true,
+			this.getVaccinePointList();
+			this.getVaccineTopTenArea();
 			this.drawEchart();
 			this.getMapData();
-			//this.drawMap();
 		}
 	}
 </script>

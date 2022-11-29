@@ -200,7 +200,7 @@
 									birthday: item.user_identify.slice(6, 10) + "-" + item.user_identify
 										.slice(10, 12) + "-" + item.user_identify.slice(12, 14),
 									age: (nowyear - parseInt(item.user_identify.slice(6, 10))),
-									vaccinedDate: item.vac_time.slice(0, 10),
+									vaccinedDate: item.vac_time==null?'':item.vac_time.slice(0, 10),
 									address: item.address,
 									dose: item.dose //0:第一剂次，1：第二剂次，2:第三剂次
 								}
