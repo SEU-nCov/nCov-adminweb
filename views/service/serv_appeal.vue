@@ -73,10 +73,10 @@
 						</el-table-column>
 						<el-table-column prop="appeal_status" label="状态" sortable>
 							<template slot-scope="scope">
-								<el-tag :type="scope.row.appeal_status == '0' ? 'primary' : 'warning'"
-									disable-transitions @click="handle(scope.row)">
+								<el-button :type="scope.row.appeal_status == '0' ? 'primary' : 'warning'"
+									@click="handle(scope.row)" :disabled="scope.row.appeal_status == '1'" size="small">
 									{{scope.row.appeal_status == '0' ? '待处理' : '已处理'}}
-								</el-tag>
+								</el-button>
 							</template>
 						</el-table-column>
 					</el-table>
@@ -157,15 +157,13 @@
 				var param = {
 					"user_id": this.userId
 				};
-				console.log(this.radio);
 				if (this.radio == '0') {
-					console.log('test')
 					setGreenCode(param);
 				} else if (this.radio == '1') {
 					setYellowCode(param);
 				} else if (this.radio == '2') {
 					setRedCode(param);
-				};
+				}
 				var param1 = {
 					appeal_id: this.appealId
 				};
@@ -223,29 +221,34 @@
 		margin-left: 5px;
 		margin-bottom: 20px;
 	}
-	
-	::v-deep .radio1 .el-radio__input.is-checked + .el-radio__label {
-	  color: green !important;
+
+	::v-deep .radio1 .el-radio__input.is-checked+.el-radio__label {
+		color: green !important;
 	}
+
 	::v-deep .radio1 .el-radio__input.is-checked .el-radio__inner {
-	  background: green !important;
-	  border-color: green !important;
+		background: green !important;
+		border-color: green !important;
 	}
-	::v-deep .radio2 .el-radio__input.is-checked + .el-radio__label {
-	  color: coral !important;
+
+	::v-deep .radio2 .el-radio__input.is-checked+.el-radio__label {
+		color: coral !important;
 	}
+
 	::v-deep .radio2 .el-radio__input.is-checked .el-radio__inner {
-	  background: coral !important;
-	  border-color: coral !important;
+		background: coral !important;
+		border-color: coral !important;
 	}
-	::v-deep .radio3 .el-radio__input.is-checked + .el-radio__label {
-	  color: red !important;
+
+	::v-deep .radio3 .el-radio__input.is-checked+.el-radio__label {
+		color: red !important;
 	}
+
 	::v-deep .radio3 .el-radio__input.is-checked .el-radio__inner {
-	  background: red !important;
-	  border-color: red !important;
+		background: red !important;
+		border-color: red !important;
 	}
-	
+
 	.header .el-card p {
 		float: right;
 		margin-top: 5px;

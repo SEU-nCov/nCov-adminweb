@@ -51,10 +51,10 @@
 						</el-table-column>
 						<el-table-column prop="consult_status" label="处理状态" sortable>
 							<template slot-scope="scope">
-								<el-tag :type="scope.row.consult_status == '0' ? 'primary' : 'warning'"
-									disable-transitions @click="handle(scope.row)">
+								<el-button :type="scope.row.consult_status == '0' ? 'primary' : 'warning'"
+									@click="handle(scope.row)" :disabled="scope.row.consult_status == '1'" size="small">
 									{{scope.row.consult_status == '0' ? '待处理' : '已处理'}}
-								</el-tag>
+								</el-button>
 							</template>
 						</el-table-column>
 					</el-table>
