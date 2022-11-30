@@ -5,8 +5,6 @@
 				核酸检测结果分析
 				<el-button plain @click="output">核酸结果导出</el-button>
 			</div>
-			<el-table id="resultTable" :data="covResultData" v-show="false">
-			</el-table>
 			<el-row :gutter="20">
 				<el-col :span="8">
 					<!-- 本市接种防疫屏障 -->
@@ -123,24 +121,13 @@
 		},
 		methods: {
 			output() {
-				let tables = document.getElementById("resultTable");
-				let table_book = this.$XLSX.utils.table_to_book(tables);
-				var table_write = this.$XLSX.write(table_book, {
-					bookType: "xlsx",
-					bookSST: true,
-					type: "array",
-				});
-				try {
-					this.$FileSaver.saveAs(
-						new Blob([table_write], {
-							type: "application/octet-stream"
-						}),
-						"covResult.xlsx"
-					);
-				} catch (e) {
-					if (typeof console !== "undefined") console.log(e, table_write);
-				}
-				return table_write;
+				const blob = new Blob([this.covResultData]);
+				const blobUrl = window.URL.createObjectURL(blob);
+				const a = document.createElement("a");
+				a.style.display = "none";
+				a.download = "核酸结果数据明细.xlsx"; // 自定义下载的文件名 
+				a.href = blobUrl;
+				a.click();
 			},
 			drawRecent() {
 				var x = ['2022-11-20', '2022-11-21', '2022-11-22', '2022-11-23', '2022-11-24', '2022-11-25',
