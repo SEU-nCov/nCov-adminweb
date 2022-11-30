@@ -129,7 +129,7 @@
 					<div class="address">
 						<div style="margin-top: 10px;color: aliceblue;">区域：</div>
 						<el-cascader v-model="selectedAddress" :options="addressOptions" @change="addressChange"
-							placeholder="请选择区域" style="width: 230px">
+							placeholder="请选择区域" style="width: 230px" :disabled="true">
 						</el-cascader>
 					</div>
 					<el-card class="phone-card" style="margin-top: 10px;">
@@ -202,7 +202,7 @@
 				addressOptions: provinceAndCityData,
 				selectedCode: 320100,
 				selectedAddress: ['320000','320100'],
-				editFlag: false,
+				editFlag: true,
 				covTelephone: [{
 						code: 320000,
 						name: "江苏省",
@@ -295,6 +295,7 @@
 			}
 		},
 		mounted() {
+			//this.editFlag = this.selectedCode == this.$admin.state.cityCode ? false:true;
 			//this.getCovTelephone();
 		}
 	}
