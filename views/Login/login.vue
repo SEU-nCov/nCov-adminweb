@@ -55,7 +55,6 @@
 		methods: {
 			login() {
 				adminLogin(this.form).then((res) => {
-					console.log(res);
 					this.$admin.state.lastLoginInTime = new Date();
 					this.$admin.state.name = res.data.data.manager_name;
 					this.$admin.state.phone = res.data.data.manager_phone;
