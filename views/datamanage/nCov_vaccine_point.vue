@@ -570,7 +570,7 @@
 		border-top: 1px solid #E6EBF5;
 	}
 
-	.el-scrollbar__wrap {
+	::v-deep .el-scrollbar__wrap {
 		overflow-x: hidden !important;
 	}
 </style>
