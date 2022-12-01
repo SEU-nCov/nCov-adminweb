@@ -248,6 +248,21 @@ export const getNatResult = (param) => {
 		data: param
 	})
 }
+//人口流调相关
+export const getTotalTodayConfirm = (param) => {
+	return axios.request({
+		url: baseURL + 'admin/getTotalTodayConfirm',
+		method: 'post',
+		data: param
+	})
+}
+export const getSurveyData = (param) => {
+	return axios.request({
+		url: baseURL + 'admin/getPositivePeopleTravel',
+		method: 'post',
+		data: param
+	})
+}
 
 //风险区相关
 export const getArea = () => {
