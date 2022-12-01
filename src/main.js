@@ -2,9 +2,11 @@ import Vue from 'vue'
 import App from './App.vue'
 import ElementUI from 'element-ui';
 import echarts from "echarts";
+// import BMap from 'BMap';
+// import "echarts/extension/bmap/bmap";
+import "echarts-extension-amap";
 import Viewer from 'v-viewer'
-import FileSaver from 'file-saver'
-import xlsx from 'xlsx'
+import JsonExcel from "vue-json-excel";
 import 'viewerjs/dist/viewer.css'
 import 'element-ui/lib/theme-chalk/index.css';
 
@@ -12,7 +14,6 @@ import 'element-ui/lib/theme-chalk/index.css';
 import router from '../router'
 import store from '../store'
 import admin from '../store/admin.js'
-//import hotel from '../store/hotel.js'
 import http from 'axios'
 import global from './global/global.js'
 // import 'element-theme-chalk'
@@ -26,8 +27,9 @@ Vue.prototype.$http = http;
 Vue.prototype.$global = global
 Vue.prototype.$echarts = require("echarts")
 Vue.prototype.$admin = admin
-Vue.prototype.$FileSaver = FileSaver; 
-Vue.prototype.$XLSX = xlsx;
+// Vue.prototype.$BMap = BMap
+Vue.component('downloadExcel', JsonExcel)
+// Vue.prototype.$jsonExcel = JsonExcel
 // Vue.prototype.$echarts = echarts;
 // Vue.prototype.$confirm=MessageBox.confirm;
 
@@ -67,14 +69,7 @@ router.beforeEach((to, from, next) => {
 	}
 	// store.commit('clearToken')
 })
-router.afterEach((to, from) => {
-	// if(from.path != '/' && to.path != '/' && to.path != '/admin'){
-	//     window.location.reload();
-	// }
-	// if(from.path != '/' && to.path == '/nCov_data'){
-	//      window.location.reload();
-	// }
-})
+
 new Vue({
 	store,
 	router,
