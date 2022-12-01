@@ -15,7 +15,8 @@
 			<div class="cov_time">
 				上次更新时间为：{{this.updateTime}}
 			</div>
-			<el-table v-loading="loading" :data="covData" style="width: 100%;margin-top: 10px;border-radius: 20px;">
+			<el-table v-loading="loading" :data="covData" style="width: 100%;margin-top: 10px;border-radius: 20px;"
+				:header-cell-class-name="headerStyle" :cell-style="cellStyle">
 				<el-table-column prop="province" label="地区">
 				</el-table-column>
 				<el-table-column prop="newConfirm" sortable label="新增确诊">
@@ -61,10 +62,54 @@
 			return {
 				covData: [],
 				loading: true,
-				updateTime:''
+				updateTime: ''
 			}
 		},
 		methods: {
+			headerStyle(rowindex) {
+				if (rowindex.column.label == "地区") {
+					return 'column1';
+				}
+				if (rowindex.column.label == "新增确诊") {
+					return 'column2';
+				}
+				if (rowindex.column.label == "现有确诊") {
+					return 'column3';
+				}
+				if (rowindex.column.label == "累计确诊") {
+					return 'column4';
+				}
+				if (rowindex.column.label == "累计死亡") {
+					return 'column5';
+				}
+				if (rowindex.column.label == "累计治愈") {
+					return 'column6';
+				}
+				if (rowindex.column.label == "详情") {
+					return 'column7';
+				}
+			},
+			cellStyle(row, column, rowIndex, columnIndex) {
+				var cellcolumn1 = {
+					'border-color': '#178b50',
+					'color': '#005500',
+					'text-align': 'center',
+					'font-weight': 650,
+					'font-family': 'PingFang SC, Helvetica Neue, Helvetica, Arial, Hiragino Sans GB, Heiti SC, Microsoft YaHei, WenQuanYi Micro Hei, sans-serif'
+				};
+				var cellcolumn234567 = {
+					'border-color': '#178b50',
+					'text-align': 'center',
+					'font-family': 'PingFang SC, Helvetica Neue, Helvetica, Arial, Hiragino Sans GB, Heiti SC, Microsoft YaHei, WenQuanYi Micro Hei, sans-serif',
+					'color': '#222'
+				};
+				if (row.columnIndex == 0) {
+					return cellcolumn1;
+				}
+				else{
+					return cellcolumn234567;
+				}
+			},
 			getCovData() {
 				getChinaCovData().then(res => {
 					this.loading = true;
@@ -95,19 +140,13 @@
 				});
 			}
 		},
-		created() {
-			this.getCovData();
-		},
 		mounted() {
-			if (window.location.href.indexOf("#reloaded") == -1) {
-				window.location.href = window.location.href + "#reloaded";
-				window.location.reload();
-			}
+			this.getCovData();
 		}
 	}
 </script>
 
-<style lang="less" scoped>
+<style scoped>
 	.epidemicData {
 		border-radius: 12px;
 		border-color: #178b50;
@@ -140,7 +179,7 @@
 		border-color: #178b50;
 		color: #005500;
 	}
-	
+
 	.cov_time {
 		width: 50%;
 		margin-left: 12px;
@@ -148,40 +187,67 @@
 		font-family: -apple-system-font, PingFang SC, Hiragino Sans GB, Heiti SC, Microsoft YaHei, WenQuanYi Micro Hei;
 		color: #999999;
 	}
-	
-	::v-deep .epidemicData td,
-	::v-deep .epidemicData th {
-		border-color: #178b50;
+
+	.epidemicData>>>.column1,
+	.epidemicData>>>.column7 {
+		color: #000;
+		background-color: #f5f5f5;
 		text-align: center;
 	}
 
-	::v-deep .demo-table-expand td,
-	::v-deep .demo-table-expand th {
+	.epidemicData>>>.column2 {
+		background-color: #fcf2e8;
+		color: #ff5d00;
+		text-align: center;
+	}
+
+	.epidemicData>>>.column3 {
+		background-color: #fdeeee;
+		color: #f55253;
+		text-align: center;
+	}
+
+	.epidemicData>>>.column4 {
+		background-color: #faf2f6;
+		color: #ca3f81;
+		text-align: center;
+	}
+
+	.epidemicData>>>.column5 {
+		background-color: #f3f6f8;
+		color: #4e5a65;
+		text-align: center;
+	}
+
+	.epidemicData>>>.column6 {
+		background-color: #f1f8f4;
+		color: #178b50;
+		text-align: center;
+	}
+	
+	/deep/ .descending .sort-caret.descending{
+	  border-top-color:#4d4d4d;
+	}
+	/deep/ .ascending  .sort-caret.ascending{
+	  border-bottom-color:#4d4d4d;
+	}
+	
+	::v-deep .epidemicData .demo-table-expand td,
+	::v-deep .epidemicData .demo-table-expand th {
 		text-align: center;
 		border-bottom: 0px;
 	}
 
-	.demo-table-expand::before {
+	::v-deep .epidemicData .demo-table-expand::before {
 		height: 0px;
 	}
 
-	::v-deep .demo-table-expand .el-table__header-wrapper {
+	::v-deep .epidemicData .demo-table-expand .el-table__header-wrapper {
 		margin-top: -15px;
 		margin-bottom: -10px;
 	}
 
-	::v-deep .epidemicData .el-table__header-wrapper .el-table_1_column_1,
-	::v-deep .epidemicData .el-table__header-wrapper .el-table_1_column_7 {
-		background-color: #f5f5f5;
-		color: black;
-		text-align: center;
-	}
-
 	::v-deep .epidemicData .el-table__header-wrapper .el-table_1_column_2 {
-		background-color: #fcf2e8;
-		color: #ff5d00;
-		text-align: center;
-
 		.sort-caret.descending {
 			border-top-color: #ffaa7f;
 		}
@@ -200,10 +266,6 @@
 	}
 
 	::v-deep .epidemicData .el-table__header-wrapper .el-table_1_column_3 {
-		background-color: #fdeeee;
-		color: #f55253;
-		text-align: center;
-
 		.sort-caret.descending {
 			border-top-color: #f9c5c1;
 		}
@@ -222,10 +284,6 @@
 	}
 
 	::v-deep .epidemicData .el-table__header-wrapper .el-table_1_column_4 {
-		background-color: #faf2f6;
-		color: #ca3f81;
-		text-align: center;
-
 		.sort-caret.descending {
 			border-top-color: #fad1e6;
 		}
@@ -258,10 +316,6 @@
 	}
 
 	::v-deep .epidemicData .el-table__header-wrapper .el-table_1_column_6 {
-		background-color: #f1f8f4;
-		color: #178b50;
-		text-align: center;
-
 		.sort-caret.descending {
 			border-top-color: #a1c7b2;
 		}
@@ -279,18 +333,4 @@
 		border-top-color: #178b50;
 	}
 
-	::v-deep .epidemicData .el-table__body-wrapper .el-table_1_column_1 {
-		color: #005500;
-		font-weight: 650;
-		font-family: PingFang SC, Helvetica Neue, Helvetica, Arial, Hiragino Sans GB, Heiti SC, Microsoft YaHei, WenQuanYi Micro Hei, sans-serif;
-	}
-
-	::v-deep .epidemicData .el-table__body-wrapper .el-table_1_column_2,
-	::v-deep .epidemicData .el-table__body-wrapper .el-table_1_column_3,
-	::v-deep .epidemicData .el-table__body-wrapper .el-table_1_column_4,
-	::v-deep .epidemicData .el-table__body-wrapper .el-table_1_column_5,
-	::v-deep .epidemicData .el-table__body-wrapper .el-table_1_column_6 {
-		font-family: PingFang SC, Helvetica Neue, Helvetica, Arial, Hiragino Sans GB, Heiti SC, Microsoft YaHei, WenQuanYi Micro Hei, sans-serif;
-		color: #222;
-	}
 </style>

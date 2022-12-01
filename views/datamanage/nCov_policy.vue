@@ -79,14 +79,14 @@
 		data() {
 			return {
 				addressOptions: provinceAndCityData,
-				selectedFromCity: '北京市',
-				selectedFromCode: 110000,
-				selectedToCity: '北京市',
-				selectedToCode: 110000,
-				selectedAddressFrom: ['110000', '110100'],
+				selectedFromCity: '南京市',
+				selectedFromCode: 320000,
+				selectedToCity: '南京市',
+				selectedToCode: 320000,
+				selectedAddressFrom: ['320000', '320100'],
 				selectedAddressTo: undefined,
 				editParam: {
-					from_code: 110000,
+					from_code: 320000,
 					come_policy: '',
 					leave_policy: ''
 				},
@@ -99,8 +99,8 @@
 				dialogFormVisible: false,
 				formLabelWidth: '170px',
 				policyLabel: '',
-				editFromFlag:this.selectedFromCode==this.$admin.state.cityCode?false:true,
-				editToFlag:this.selectedToCode==this.$admin.state.cityCode?false:true,
+				editFromFlag:false,
+				editToFlag:false,
 				form: {
 					to: '',
 					from: '',
