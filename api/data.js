@@ -198,6 +198,57 @@ export const editVaccinePoint = (param) => {
 	})
 }
 
+// 核酸检测结果相关
+export const getTenDayNatNumber = (param) => {
+	return axios.request({
+		url: baseURL + 'admin/get/TenDayNatnumber',
+		method: 'post',
+		data: param
+	})
+}
+export const getNatStatisticsCollected = (param) => {
+	return axios.request({
+		url: baseURL + 'admin/NatStatisticsCollected',
+		method: 'post',
+		data: param
+	})
+}
+export const getNatStatisticsTested = (param) => {
+	return axios.request({
+		url: baseURL + 'admin/NatStatisticsTested',
+		method: 'post',
+		data: param
+	})
+}
+export const getNatStatisticsNegative = (param) => {
+	return axios.request({
+		url: baseURL + 'admin/NatStatisticsNegative',
+		method: 'post',
+		data: param
+	})
+}
+export const getAreaTotalNat = (param) => {
+	return axios.request({
+		url: baseURL + 'admin/get/NatnumOfArea',
+		method: 'post',
+		data: param
+	})
+}
+export const getAreaTodayNat = (param) => {
+	return axios.request({
+		url: baseURL + 'admin/get/TodayNatnumOfArea',
+		method: 'post',
+		data: param
+	})
+}
+export const getNatResult = (param) => {
+	return axios.request({
+		url: baseURL + 'admin/getAllNatResult',
+		method: 'post',
+		data: param
+	})
+}
+
 //风险区相关
 export const getArea = () => {
 	return axios.request({
