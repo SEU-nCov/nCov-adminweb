@@ -2,8 +2,10 @@
 	<div>
 		<el-card class="covResult">
 			<div class="title">
-				核酸检测结果分析
-				<el-button plain @click="output">核酸结果导出</el-button>
+				<download-excel class="export-excel-wrapper" :data="this.covResultData" name="核酸结果统计.xls">
+					核酸检测结果分析
+					<el-button plain>核酸结果导出</el-button>
+				</download-excel>
 			</div>
 			<el-row :gutter="20">
 				<el-col :span="8">
@@ -84,11 +86,24 @@
 	</div>
 </template>
 <script>
+	import {
+		getTenDayNatNumber,
+		getNatStatisticsCollected,
+		getNatStatisticsTested,
+		getNatStatisticsNegative,
+		getAreaTodayNat,
+		getAreaTotalNat,
+		getNatResult
+	} from '../../api/data.js';
 	export default {
 		name: 'ana_test',
 		data() {
 			return {
 				covResultData: [],
+				recentDays: ['2022-11-20', '2022-11-21', '2022-11-22', '2022-11-23', '2022-11-24', '2022-11-25',
+					'2022-11-26', '2022-11-27', '2022-11-28', '2022-11-29'
+				],
+				recentData: [2434, 2399, 2620, 2503, 2656, 2498, 3020, 4090, 6045, 6729],
 				areaList: ['江宁区', '秦淮区', '栖霞区', '玄武区', '雨花台区', '建邺区', '六合区', '溧水区', '高淳区', '浦口区', '鼓楼区'],
 				todayTestData: [1833, 1533, 691, 575, 463, 457, 373, 341, 274, 233, 101],
 				totalTestData: [117853, 111533, 103690, 93535, 58763, 57773, 50364, 49441, 46174, 32333, 19701],
@@ -120,20 +135,94 @@
 			}
 		},
 		methods: {
-			output() {
-				const blob = new Blob([this.covResultData]);
-				const blobUrl = window.URL.createObjectURL(blob);
-				const a = document.createElement("a");
-				a.style.display = "none";
-				a.download = "核酸结果数据明细.xlsx"; // 自定义下载的文件名 
-				a.href = blobUrl;
-				a.click();
+			getAllNatResult() {
+				var param = {
+					city_code: this.$admin.state.cityCode
+				}
+				getNatResult(param).then(res => {
+					if (res.data.code == 200) {
+						this.covResultData = res.data.data;
+					} else {
+						console.log('error:get AllNatResult!!');
+					}
+				});
+			},
+			getRecentData() {
+				var param = {
+					city_code: this.$admin.state.cityCode
+				}
+				getTenDayNatNumber(param).then(res => {
+					if (res.data.code == 200) {
+						this.recentData = [];
+						this.recentDays = [];
+						res.data.data.map(item => {
+							this.recentData.push(item.nat_number);
+							this.recentDays.push(item.nat_time.slice(0, 10));
+						});
+						this.drawRecent();
+					} else {
+						console.log('error:get TenDayNatNumber!!');
+					}
+				})
+			},
+			getRankingData() {
+				var param = {
+					city_code: this.$admin.state.cityCode
+				}
+				getAreaTodayNat(param).then(res => {
+					if (res.data.code == 200) {
+						this.areaList = [];
+						this.todayTestData = [];
+						res.data.data.map(item => {
+							this.areaList.push(item.area_name);
+							this.todayTestData.push(item.t_areanat);
+						})
+						getAreaTotalNat(param).then(res => {
+							if (res.data.code == 200) {
+								this.totalTestData = [];
+								res.data.data.map(item => {
+									this.totalTestData.push(item.t_areanat);
+								});
+								this.drawRanking();
+							} else {
+								console.log('error:get AreaTotalNat!!');
+							}
+						})
+					} else {
+						console.log('error:get AreaTodayNat!!');
+					}
+				})
+			},
+			getStatistic() {
+				var param = {
+					city_code: this.$admin.state.cityCode
+				}
+				getNatStatisticsCollected(param).then(res => {
+					if (res.data.code == 200) {
+						this.totalCollect = res.data.data;
+					} else {
+						console.log('error:get StatisticsTotalCollect!!');
+					}
+				});
+				getNatStatisticsTested(param).then(res => {
+					if (res.data.code == 200) {
+						this.totalTest = res.data.data;
+					} else {
+						console.log('error:get StatisticsTotalTest!!');
+					}
+				});
+				getNatStatisticsNegative(param).then(res => {
+					if (res.data.code == 200) {
+						this.greenNum = res.data.data;
+					} else {
+						console.log('error:get StatisticsNegative!!');
+					}
+				});
+				this.percentage = Math.floor(this.totalTest / this.totalCollect * 100);
 			},
 			drawRecent() {
-				var x = ['2022-11-20', '2022-11-21', '2022-11-22', '2022-11-23', '2022-11-24', '2022-11-25',
-					'2022-11-26', '2022-11-27', '2022-11-28', '2022-11-29'
-				];
-				var y = [2434, 2399, 2620, 2503, 2656, 2498, 3020, 4090, 6045, 6729];
+				var x = this.recentDays;
+				var y = this.recentData;
 				var div = this.$refs.recentResults;
 				if (div) {
 					var myChart = this.$echarts.init(div);
@@ -294,8 +383,10 @@
 			}
 		},
 		mounted() {
-			this.drawRecent();
-			this.drawRanking();
+			this.getAllNatResult();
+			this.getRecentData();
+			this.getRankingData();
+			this.getStatistic();
 		}
 	}
 </script>
