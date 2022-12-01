@@ -14,7 +14,7 @@
 						<el-row :gutter="20">
 							<el-col :span="12">
 								<el-card style="background-color:antiquewhite;margin-top: 10px;">
-									<h4>确诊病例</h4>
+									<h4>累计确诊病例</h4>
 									<div class="number">
 										{{this.totalConfirm}}
 									</div>
@@ -22,7 +22,7 @@
 							</el-col>
 							<el-col :span="12">
 								<el-card style="background-color:#fff7f7; margin-top: 10px;">
-									<h4>密接人员</h4>
+									<h4>今日确诊病例</h4>
 									<div class="number">
 										{{this.totalContain}}
 									</div>
@@ -32,10 +32,10 @@
 						<el-row>
 							<el-card style="background-color:#fffaf7; margin-top: 10px;">
 								<div class="subsubtitle">病例详情</div>
-								<el-table :data="surveyData" style="width: 100%;">
-									<el-table-column prop="id" label="病历号" width=70>
+								<el-table :data="surveyData" style="width: 100%; height:215px;">
+									<el-table-column prop="id" label="病历号" width=65>
 									</el-table-column>
-									<el-table-column prop="name" label="姓名" width=70>
+									<el-table-column prop="name" label="姓名" width=65>
 									</el-table-column>
 									<el-table-column prop="address" label="流调区域">
 									</el-table-column>
@@ -59,24 +59,33 @@
 		CodeToText,
 		TextToCode
 	} from "../../node_modules/element-china-area-data"
+	import {
+		getTotalTodayConfirm,
+		getSurveyData
+	} from "../../api/data.js"
 	export default {
 		name: 'ana_people',
 		data() {
 			return {
 				totalConfirm: 245,
 				totalContain: 657,
+				center: [118.767413, 32.041544],
 				surveyData: [{
-					id:1,
-					name:'zqw',
-					address:"南京市,扬州市"
-				},{
-					id:2,
-					name:'czy',
-					address:"南京市,南京市"
-				},{
-					id:3,
-					name:'lzj',
-					address:"南京市,盐城市"
+					id: 1,
+					name: 'zqw',
+					address: "南京市,扬州市"
+				}, {
+					id: 2,
+					name: 'czy',
+					address: "南京市,南通市"
+				}, {
+					id: 3,
+					name: 'lzj',
+					address: "南京市,盐城市"
+				}, {
+					id: 4,
+					name: 'gy',
+					address: "南京市,宁波市"
 				}],
 				linesdata: [{
 						fromName: "南京",
@@ -141,10 +150,63 @@
 			CodeToText(id) {
 				return CodeToText[id];
 			},
+			getData() {
+				var param = {
+					city_code: this.$admin.state.cityCode
+				};
+				getTotalTodayConfirm(param).then(res => {
+					if (res.data.data == 200) {
+						this.totalConfirm = res.data.data.totalConfirm;
+						this.totalContain = res.data.data.todayConfirm;
+					} else {
+						console.log('error:get totalTodayConfirm!');
+					}
+				});
+				getSurveyData(param).then(res => {
+					if (res.data.data == 200) {
+						let idArr = [];
+						let arr = res.data.data.map(item => {
+							if(item.city_code==this.$admin.state.cityCode)
+								this.center=[parseInt(item.city_longitude),parseInt(item.city_latitude)];
+							return {
+								id: item.user_id,
+								name: item.user_name,
+								address: item.city_name
+							}
+						});
+						for (let i = 0; i < arr.length; i++) {
+							let index = idArr.indexOf(arr[i].id)
+							if (index > -1) { //有相同id存在的话,获取index索引位置
+								this.surveyData[index].address += "," + arr[i].address //取相同id的address拼接
+							} else {
+								idArr.push(arr[i].id)
+								this.surveyData.push(arr[i])
+							}
+						};
+						res.data.data.map(item => {
+							if(item.city_code!=this.$admin.state.cityCode){
+								this.linedata.push({
+									fromName: this.$admin.state.cityName,
+									toName: item.city_name,
+									coords: [
+										this.center,
+										[parseInt(item.city_longitude),parseInt(item.city_latitude)]
+									]
+								});
+							}
+						});
+						console.log(this.surveyData);
+						console.log(this.linedata);
+						this.drawMap();
+					} else {
+						console.log('error:get SurveyData!');
+					}
+				});
+			},
 			drawMap() {
 				var map = new AMap.Map("mapId", {
 					zoom: 6,
-					center: [118.767413, 32.041544],
+					center: this.center,
 					mapStyle: "amap://styles/whitesmoke",
 					pitch: 0,
 				});
@@ -161,7 +223,7 @@
 						pitch: 0, //45 俯仰角
 						zoom: 6,
 						mapStyle: "amap://styles/whitesmoke",
-						center: [118.767413, 32.041544], //中心点
+						center:this.center, //中心点
 						resizeEnable: true,
 					},
 					animation: false,
@@ -187,7 +249,7 @@
 			}
 		},
 		mounted() {
-			this.drawMap();
+			this.getData();
 		}
 	}
 </script>
@@ -248,14 +310,24 @@
 
 	::v-deep .survey .el-table,
 	.el-table__expanded-cell,
-	.el-table--enable-row-transition .el-table__body td, .el-table .cell{
+	.el-table--enable-row-transition .el-table__body td,
+	.el-table .cell {
 		background-color: transparent;
 	}
 	
-	/deep/ .el-table th,
-	/deep/ .el-table tr,
-	/deep/ .el-table td {
-	  background-color: transparent;
+	::v-deep .el-table::before {
+		display: none !important;
+	}
+	
+	::v-deep .el-table {
+		overflow: auto;
+		overflow-x: hidden !important;
+	}
+	
+	::v-deep .el-table th,
+	::v-deep .el-table tr,
+	::v-deep .el-table td {
+		background-color: transparent;
 	}
 
 </style>
