@@ -155,7 +155,7 @@
 					city_code: this.$admin.state.cityCode
 				};
 				getTotalTodayConfirm(param).then(res => {
-					if (res.data.data == 200) {
+					if (res.data.code == 200) {
 						this.totalConfirm = res.data.data.totalConfirm;
 						this.totalContain = res.data.data.todayConfirm;
 					} else {
@@ -163,7 +163,8 @@
 					}
 				});
 				getSurveyData(param).then(res => {
-					if (res.data.data == 200) {
+					console.log(res);
+					if (res.data.code == 200) {
 						let idArr = [];
 						let arr = res.data.data.map(item => {
 							if(item.city_code==this.$admin.state.cityCode)
@@ -199,7 +200,8 @@
 						console.log(this.linedata);
 						this.drawMap();
 					} else {
-						console.log('error:get SurveyData!');
+						console.log('error:get SurveyData! Reason:'+res.data.msg);
+						this.drawMap();
 					}
 				});
 			},
