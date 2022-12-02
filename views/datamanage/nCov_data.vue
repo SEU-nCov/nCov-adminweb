@@ -127,8 +127,7 @@
 								return {
 									name: iitem.name,
 									newConfirm: iitem.today.confirm, //新增确诊
-									nowConfirm: iitem.total.confirm - iitem.total.dead - iitem
-										.total.heal, //现有确诊
+									nowConfirm: iitem.total.confirm - iitem.total.dead - iitem.total.heal, //现有确诊
 									confirm: iitem.total.confirm, //累计确诊
 									dead: iitem.total.dead,
 									heal: iitem.total.heal
